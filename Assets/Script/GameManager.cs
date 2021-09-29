@@ -45,10 +45,7 @@ public class GameManager : MonoBehaviour
             isEnd = true;
         }
     }
-    public void Reload(string name)
-    {
-        SceneManager.LoadScene(name);
-    }
+
     void Count()
     {
         if (m_countTime >= 0)
@@ -61,5 +58,9 @@ public class GameManager : MonoBehaviour
             m_startEvent.Invoke();
             isOn = true;
         }
+    }
+    public void Ranking()
+    {
+        naichilab.RankingLoader.Instance.SendScoreAndShowRanking(m_movingDistance);
     }
 }
