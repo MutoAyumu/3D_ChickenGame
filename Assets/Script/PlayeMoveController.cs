@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayeMoveController : MonoBehaviour
 {
@@ -18,11 +19,14 @@ public class PlayeMoveController : MonoBehaviour
 
     [SerializeField] float m_movePower = 5f;
     [SerializeField] float m_jumpPower = 5f;
-    [SerializeField] Camera m_cam;
-    [SerializeField] float m_cameraRotateTime = 1f;
     [SerializeField] string m_ground = "Ground";
     [SerializeField] StageManager m_stageManager = default;
     [SerializeField] string m_stageTag = "StageGenerator";
+    [SerializeField] Slider m_jumpSlider = default;
+    [SerializeField] float m_jumpInterval = 5f;
+    [SerializeField] Image m_fillImage = default;
+    [SerializeField] Color m_maxJumpColor = default;
+    Color m_standardColor;
     [SerializeField] UnityEvent m_end;
     [SerializeField] string m_endTag = "Car";
 
@@ -31,11 +35,22 @@ public class PlayeMoveController : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
         m_anim = GetComponent<Animator>();
         m_audio = GetComponent<AudioSource>();
+        m_jumpSlider.value = 1;
+        m_standardColor = m_fillImage.color;
     }
     private void Update()
     {
         InputMove();
         UpdateMove();
+
+        if(m_jumpSlider.value != 1)
+        {
+            m_jumpSlider.value += 1 / m_jumpInterval * Time.deltaTime;
+        }
+        else
+        {
+            m_fillImage.color = m_maxJumpColor;
+        }
     }
     void InputMove()
     {
@@ -52,10 +67,6 @@ public class PlayeMoveController : MonoBehaviour
     {
         if (m_movePos.sqrMagnitude > 0 && isJump)
         {
-            //Quaternion m_LookRotation = Quaternion.LookRotation(m_cam.transform.rotation * m_movePos);
-            //m_LookRotation.z = 0;
-            //m_LookRotation.x = 0;
-            //transform.rotation = Quaternion.Slerp(transform.rotation, m_LookRotation, m_cameraRotateTime * Time.fixedDeltaTime);
             m_rb.velocity = transform.forward * m_movePower;
             m_anim.SetBool("Walk", true);
         }
@@ -66,13 +77,15 @@ public class PlayeMoveController : MonoBehaviour
     }
     public void UpdateJump()
     {
-        if (!isOn)
+        if (!isOn && m_jumpSlider.value == 1)
         {
             m_rb.AddForce(new Vector3(0, m_jumpPower, 0), ForceMode.VelocityChange);
             isJump = false;
             isOn = true;
             m_anim.SetBool("Run", true);
             m_audio.Play();
+            m_jumpSlider.value = 0;
+            m_fillImage.color = m_standardColor;
         }
     }
     private void OnTriggerEnter(Collider other)

@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
         if (isOn && !isEnd)
         {
             m_timeLimit -= Time.deltaTime;
-            m_timerText.text = m_timeLimit.ToString("F0") + "s";
+            m_timerText.text = "Timer    : " + m_timeLimit.ToString("F0") + "s";
 
             m_movingDistance = m_playerPos.transform.position.z - m_startPos.z;
-            m_movingDistanceText.text = m_movingDistance.ToString("F0") + "m";
+            m_movingDistanceText.text = "Record : " + m_movingDistance.ToString("F0") + "m";
         }
         
         if(m_timeLimit <= 0 && !isEnd)
