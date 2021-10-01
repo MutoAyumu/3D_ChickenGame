@@ -122,12 +122,12 @@ namespace naichilab
                 if (_board.Order == ScoreOrder.OrderByAscending)
                 {
                     //数値が低い方が高スコア
-                    sendScoreButton.interactable = _lastScore.Value > highScore.Value;
+                    sendScoreButton.interactable = _lastScore.Value < highScore.Value;
                 }
                 else
                 {
                     //数値が高い方が高スコア
-                    sendScoreButton.interactable = highScore.Value > _lastScore.Value;
+                    sendScoreButton.interactable = highScore.Value < _lastScore.Value;
                 }
 
                 Debug.Log(string.Format("登録済みスコア:{0} 今回スコア:{1} ハイスコア更新:{2}", highScore.Value, _lastScore.Value,
